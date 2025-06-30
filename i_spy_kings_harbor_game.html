@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>I Spy: Kings Harbor Edition</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #e0f7fa;
+            color: #006064;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #00796b;
+        }
+        .game-board {
+            max-width: 700px;
+            margin: auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .clue {
+            margin: 10px 0;
+        }
+        .score {
+            font-size: 1.2em;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #004d40;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-board">
+        <h1>🕵️‍♀️ I Spy: Kings Harbor Edition 🌊</h1>
+        <form id="spyForm">
+
+        <div class="clue">
+            <input type="checkbox" id="clue0" name="clue" value="2" onclick="calculateScore()">
+            <label for="clue0">I spy a seagull stealing a snack from an unsuspecting tourist. (2 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue1" name="clue" value="3" onclick="calculateScore()">
+            <label for="clue1">I spy a harbor seal peeking out of the water. (3 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue2" name="clue" value="1" onclick="calculateScore()">
+            <label for="clue2">I spy a fisherman casting a line off the pier. (1 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue3" name="clue" value="2" onclick="calculateScore()">
+            <label for="clue3">I spy a bright orange kayak racing a paddleboard. (2 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue4" name="clue" value="3" onclick="calculateScore()">
+            <label for="clue4">I spy a child waving from a glass-bottom boat. (3 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue5" name="clue" value="2" onclick="calculateScore()">
+            <label for="clue5">I spy a harbor patrol boat cruising by. (2 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue6" name="clue" value="1" onclick="calculateScore()">
+            <label for="clue6">I spy a cluster of colorful beach umbrellas on the shore. (1 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue7" name="clue" value="4" onclick="calculateScore()">
+            <label for="clue7">I spy a giant inflatable flamingo float. (4 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue8" name="clue" value="3" onclick="calculateScore()">
+            <label for="clue8">I spy a group of scuba divers getting ready to dive. (3 pts)</label>
+        </div>
+    
+        <div class="clue">
+            <input type="checkbox" id="clue9" name="clue" value="4" onclick="calculateScore()">
+            <label for="clue9">I spy a mermaid mural painted on a harbor wall. (4 pts)</label>
+        </div>
+    
+        </form>
+        <div class="score">Total Score: <span id="totalScore">0</span></div>
+        <div class="result" id="resultMessage">Let's play!</div>
+    </div>
+
+    <script>
+        function calculateScore() {
+            const checkboxes = document.querySelectorAll('input[name="clue"]:checked');
+            let score = 0;
+            checkboxes.forEach(cb => score += parseInt(cb.value));
+            document.getElementById('totalScore').textContent = score;
+
+            let message = "";
+            if (score <= 5) {
+                message = "Harbor Newbie 🌱";
+            } else if (score <= 10) {
+                message = "Coastal Cruiser 🚤";
+            } else if (score <= 20) {
+                message = "Sea Sleuth 🌊🔍";
+            } else {
+                message = "Harbor Hero 🏅 You get bragging rights!";
+            }
+            document.getElementById('resultMessage').textContent = message;
+        }
+    </script>
+</body>
+</html>
