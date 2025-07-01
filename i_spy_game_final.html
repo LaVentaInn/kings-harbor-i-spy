@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>I Spy from the Boat</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #87ceeb, #ffffff);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    header {
+      background: #0077be;
+      color: white;
+      padding: 1em;
+    }
+    .player-setup, .game-area, .leaderboard {
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 1em;
+      background: #e0f7fa;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    .player-input {
+      margin: 5px 0;
+    }
+    .scoreboard {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .player {
+      margin: 10px;
+      padding: 10px;
+      background: #b2ebf2;
+      border-radius: 8px;
+      width: 45%;
+      transition: transform 0.3s ease;
+    }
+    .player:hover {
+      transform: scale(1.05);
+    }
+    .clue {
+      animation: fadeInUp 1s ease;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: #0077be;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .leaderboard table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .leaderboard th, .leaderboard td {
+      border: 1px solid #0077be;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>I Spy from the Boat</h1>
+    <p>Explore King's Harbor, Redondo Beach, CA</p>
+  </header>
+
+  <div class="player-setup">
+    <h2>Enter Player Names</h2>
+    <div id="nameInputs">
+      <!-- Player name inputs will be inserted here -->
+    </div>
+    <button onclick="startGame()">Start Game</button>
+  </div>
+
+  <div class="game-area" style="display:none;">
+    <h2 class="clue">Clues</h2>
+    <ol id="clueList" class="clue"></ol>
+    <div class="scoreboard" id="scoreboard"></div>
+    <button onclick="showLeaderboard()">Show Final Leaderboard</button>
+  </div>
+
+  <div class="leaderboard" style="display:none;">
+    <h2>Final Leaderboard</h2>
+    <table id="leaderboardTable">
+      <thead><tr><th>Player</th><th>Score</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const clues = [
+      { text: "I spy something that floats and has sails.", points: 1 },
+      { text: "I spy a bird diving into the water.", points: 2 },
+      { text: "I spy a red kayak paddling by.", points: 2 },
+      { text: "I spy a seal sunbathing on a buoy.", points: 3 },
+      { text: "I spy a lighthouse in the distance.", points: 3 },
+      { text: "I spy a scuba diver entering the water.", points: 4 },
+      { text: "I spy a school of fish near the surface.", points: 4 },
+      { text: "I spy a dolphin jumping out of the water.", points: 5 },
+      { text: "I spy a pirate flag waving on a boat.", points: 5 },
+      { text: "I spy a treasure chest on the ocean floor.", points: 6 }
+    ];
+
+    const maxPlayers = 8;
+    let players = [];
+
+    window.onload = () => {
+      const nameInputs = document.getElementById("nameInputs");
+      for (let i = 0; i < maxPlayers; i++) {
+        const input = document.createElement("input");
+        input.placeholder = `Player ${i + 1} Name`;
+        input.className = "player-input";
+        nameInputs.appendChild(input);
+      }
+    };
+
+    function startGame() {
+      const inputs = document.querySelectorAll(".player-input");
+      players = Array.from(inputs).map((input, index) => ({
+        name: input.value || `Player ${index + 1}`,
+        score: 0
+      }));
+
+      document.querySelector(".player-setup").style.display = "none";
+      document.querySelector(".game-area").style.display = "block";
+
+      const clueList = document.getElementById("clueList");
+      clues.forEach((clue, index) => {
+        const li = document.createElement("li");
+        li.textContent = `${clue.text} (${clue.points} pts)`;
+        clueList.appendChild(li);
+      });
+
+      const scoreboard = document.getElementById("scoreboard");
+      players.forEach((player, index) => {
+        const div = document.createElement("div");
+        div.className = "player";
+        div.innerHTML = `
+          <h3>${player.name}</h3>
+          <p>Score: <span id="score${index}">0</span></p>
+          <select id="clueSelect${index}">
+            ${clues.map((clue, i) => `<option value="${i}">${clue.text} (${clue.points} pts)</option>`).join("")}
+          </select>
+          <button onclick="claimPoints(${index})">Claim Points</button>
+        `;
+        scoreboard.appendChild(div);
+      });
+    }
+
+    function claimPoints(index) {
+      const select = document.getElementById(`clueSelect${index}`);
+      const clueIndex = parseInt(select.value);
+      players[index].score += clues[clueIndex].points;
+      document.getElementById(`score${index}`).textContent = players[index].score;
+    }
+
+    function showLeaderboard() {
+      document.querySelector(".leaderboard").style.display = "block";
+      const tbody = document.querySelector("#leaderboardTable tbody");
+      tbody.innerHTML = "";
+      players.sort((a, b) => b.score - a.score).forEach(player => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${player.name}</td><td>${player.score}</td>`;
+        tbody.appendChild(row);
+      });
+    }
+  </script>
+</body>
+</html>
